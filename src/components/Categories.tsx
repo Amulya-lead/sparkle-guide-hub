@@ -13,23 +13,26 @@ import {
   Gamepad2,
   Stethoscope
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const categories = [
-  { name: 'Restaurants', icon: Utensils, color: 'from-orange-400 to-red-500' },
-  { name: 'Salons & Spas', icon: Scissors, color: 'from-pink-400 to-purple-500' },
-  { name: 'Events', icon: Calendar, color: 'from-blue-400 to-cyan-500' },
-  { name: 'Shopping', icon: ShoppingBag, color: 'from-green-400 to-teal-500' },
-  { name: 'Fitness', icon: Dumbbell, color: 'from-yellow-400 to-orange-500' },
-  { name: 'Nightlife', icon: Music, color: 'from-purple-400 to-pink-500' },
-  { name: 'Automotive', icon: Car, color: 'from-gray-400 to-gray-600' },
-  { name: 'Beauty', icon: Heart, color: 'from-rose-400 to-pink-500' },
-  { name: 'Cafes', icon: Coffee, color: 'from-amber-400 to-orange-500' },
-  { name: 'Photography', icon: Camera, color: 'from-indigo-400 to-purple-500' },
-  { name: 'Gaming', icon: Gamepad2, color: 'from-cyan-400 to-blue-500' },
-  { name: 'Healthcare', icon: Stethoscope, color: 'from-emerald-400 to-teal-500' }
+  { name: 'Restaurants', icon: Utensils, color: 'from-orange-400 to-red-500', path: '/restaurants' },
+  { name: 'Salons & Spas', icon: Scissors, color: 'from-pink-400 to-purple-500', path: '/salons' },
+  { name: 'Events', icon: Calendar, color: 'from-blue-400 to-cyan-500', path: '/events' },
+  { name: 'Shopping', icon: ShoppingBag, color: 'from-green-400 to-teal-500', path: '/search?category=shopping' },
+  { name: 'Fitness', icon: Dumbbell, color: 'from-yellow-400 to-orange-500', path: '/search?category=fitness' },
+  { name: 'Nightlife', icon: Music, color: 'from-purple-400 to-pink-500', path: '/search?category=nightlife' },
+  { name: 'Automotive', icon: Car, color: 'from-gray-400 to-gray-600', path: '/search?category=automotive' },
+  { name: 'Beauty', icon: Heart, color: 'from-rose-400 to-pink-500', path: '/search?category=beauty' },
+  { name: 'Cafes', icon: Coffee, color: 'from-amber-400 to-orange-500', path: '/search?category=cafes' },
+  { name: 'Photography', icon: Camera, color: 'from-indigo-400 to-purple-500', path: '/search?category=photography' },
+  { name: 'Gaming', icon: Gamepad2, color: 'from-cyan-400 to-blue-500', path: '/search?category=gaming' },
+  { name: 'Healthcare', icon: Stethoscope, color: 'from-emerald-400 to-teal-500', path: '/search?category=healthcare' }
 ];
 
 const Categories = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="py-20 px-4 relative">
       {/* Background effects */}
@@ -56,8 +59,9 @@ const Categories = () => {
             return (
               <div
                 key={category.name}
-                className="card-category group animate-fade-in-up"
+                className="card-category group animate-fade-in-up cursor-pointer"
                 style={{ animationDelay: `${index * 0.1}s` }}
+                onClick={() => navigate(category.path)}
               >
                 <div className="text-center">
                   <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${category.color} mb-4 group-hover:scale-110 transition-transform duration-300`}>
@@ -78,7 +82,7 @@ const Categories = () => {
 
         {/* Bottom CTA */}
         <div className="text-center mt-16">
-          <button className="btn-hero group">
+          <button className="btn-hero group" onClick={() => navigate('/search')}>
             View All Categories
             <div className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300">→</div>
           </button>

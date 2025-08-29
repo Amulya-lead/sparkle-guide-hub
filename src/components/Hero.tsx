@@ -2,8 +2,26 @@
 import { Search, MapPin, Clock, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const Hero = () => {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate('/search');
+    }
+  };
+
+  const handleExplore = () => navigate('/search');
+  const handleFindNearMe = () => navigate('/search?location=near-me');
+  const handleWhatsOpen = () => navigate('/search?filter=open-now');
+  const handleTopRated = () => navigate('/search?sort=rating');
+
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* Animated background elements */}
@@ -36,10 +54,13 @@ const Hero = () => {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60" />
               <Input 
                 placeholder="Search for anything in your city..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 className="pl-12 py-4 text-lg bg-white/10 border-white/20 text-white placeholder:text-white/60"
               />
             </div>
-            <Button className="btn-hero px-8 py-4">
+            <Button className="btn-hero px-8 py-4" onClick={handleExplore}>
               Explore
             </Button>
           </div>
@@ -47,15 +68,15 @@ const Hero = () => {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-          <Button className="btn-hero">
+          <Button className="btn-hero" onClick={handleFindNearMe}>
             <MapPin className="mr-2" />
             Find Near Me
           </Button>
-          <Button className="btn-secondary">
+          <Button className="btn-secondary" onClick={handleWhatsOpen}>
             <Clock className="mr-2" />
             What's Open Now
           </Button>
-          <Button className="btn-secondary">
+          <Button className="btn-secondary" onClick={handleTopRated}>
             <Star className="mr-2" />
             Top Rated
           </Button>
