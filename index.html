@@ -1,25 +1,116 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CityHub - Your Complete City Guide</title>
-    <meta name="description" content="Discover restaurants, salons, events, and everything your city has to offer in one amazing place" />
+    <meta
+      name="description"
+      content="Discover restaurants, salons, events, and everything your city has to offer in one amazing place"
+    />
     <meta name="author" content="Lovable" />
 
     <meta property="og:title" content="CityHub - Your Complete City Guide" />
-    <meta property="og:description" content="Discover restaurants, salons, events, and everything your city has to offer in one amazing place" />
+    <meta
+      property="og:description"
+      content="Discover restaurants, salons, events, and everything your city has to offer in one amazing place"
+    />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta
+      property="og:image"
+      content="https://lovable.dev/opengraph-image-p98pqg.png"
+    />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta
+      name="twitter:image"
+      content="https://lovable.dev/opengraph-image-p98pqg.png"
+    />
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      #places {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .card {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background: #f9f9f9;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .card h3 {
+        margin: 0 0 5px;
+      }
+    </style>
   </head>
 
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <h1>Nearby Places</h1>
+    <button onclick="getLocation()">Find Nearby Restaurants</button>
+    <div id="places"></div>
+
+    <script>
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+
+      function showPosition(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        console.log("Your location:", lat, lon);
+        getNearbyPlaces(lat, lon);
+      }
+
+      function showError(error) {
+        alert("Error getting location: " + error.message);
+      }
+
+      async function getNearbyPlaces(lat, lon) {
+        const radius = 15000; // 15 km
+        const apiKey = "AIzaSyA74x3swDp8cizJtTIU6QVLy7hiMAZA1jU"; // ✅ your key
+        const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lon}&radius=${radius}&type=restaurant&key=${apiKey}`;
+
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+          displayPlaces(data.results);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      function displayPlaces(places) {
+        const container = document.getElementById("places");
+        container.innerHTML = "";
+
+        if (!places || places.length === 0) {
+          container.innerHTML = "<p>No places found nearby.</p>";
+          return;
+        }
+
+        places.forEach((place) => {
+          const div = document.createElement("div");
+          div.className = "card";
+          div.innerHTML = `
+            <h3>${place.name}</h3>
+            <p>${place.vicinity || "No address available"}</p>
+            <p>⭐ ${place.rating || "N/A"}</p>
+          `;
+          container.appendChild(div);
+        });
+      }
+    </script>
   </body>
 </html>
